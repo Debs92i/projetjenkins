@@ -27,7 +27,8 @@ pipeline {
         stage('Déploiement avec Ansible') {
             steps {
                 // Adapte le chemin de ton playbook
-                sh 'ansible-playbook -i inventory deploy.yml --ask-vault-pass'
+		sh 'ansible-playbook -i ./ansible/hosts deploy.yml --vault-password-file ~/.vault_pass.txt'
+               
             }
         }
     }
