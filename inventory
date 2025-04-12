@@ -1,0 +1,2 @@
+[jenkins]
+192.168.28.133 ansible_user=debs ansible_ssh_private_key_file=~/.ssh/jenkins_ansible
