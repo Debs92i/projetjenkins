@@ -1,8 +1,9 @@
 pipeline {
-    agent any  // Jenkins peut exécuter ce job sur n'importe quel agent
+    agent any
 
     environment {
-        ANSIBLE_HOST_KEY_CHECKING = 'False'  // pour éviter les erreurs SSH avec Ansible
+        ANSIBLE_HOST_KEY_CHECKING = 'False'
+        VENV_DIR = 'venv'  // Dossier de l'environnement virtuel
     }
 
     stages {
@@ -12,33 +13,39 @@ pipeline {
             }
         }
 
+        stage('Créer un environnement virtuel') {
+            steps {
+                sh 'python3 -m venv $VENV_DIR'
+            }
+        }
+
         stage('Installer les dépendances') {
             steps {
-                sh 'pip install -r requirements.txt || true'  // en cas de requirements, sinon on ignore
+                sh './$VENV_DIR/bin/pip install --upgrade pip'
+                sh './$VENV_DIR/bin/pip install -r requirements.txt'
             }
         }
 
         stage('Tests unitaires') {
             steps {
-                sh 'pytest test_app.py'
+                sh './$VENV_DIR/bin/pytest test_app.py'
             }
         }
 
         stage('Déploiement avec Ansible') {
             steps {
-                // Adapte le chemin de ton playbook
-		sh 'ansible-playbook -i ./ansible/hosts deploy.yml --vault-password-file ~/.vault_pass.txt'
-               
+                sh './$VENV_DIR/bin/ansible-playbook -i inventory deploy.yml --vault-password-file ~/.vault_pass.txt'
             }
         }
     }
 
     post {
-        failure {
-            echo "🚨 Le pipeline a échoué ! Vérifie les logs."
-        }
         success {
             echo "✅ Déploiement réussi !"
         }
+        failure {
+            echo "🚨 Le pipeline a échoué ! Vérifie les logs."
+        }
     }
 }
+
