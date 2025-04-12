@@ -1,0 +1,18 @@
+- name: Déployer l'application simple
+  hosts: appserver
+  become: true
+
+  tasks:
+    - name: Créer le dossier de l'app sur le serveur
+      file:
+        path: /opt/simple-api
+        state: directory
+        mode: '0755'
+
+    - name: Copier le code sur le serveur
+      copy:
+        src: ./app.py
+        dest: /opt/simple-api/app.py
+
+    - name: Exécuter l'application (en arrière-plan ici juste pour test)
+      shell: python3 /opt/simple-api/app.py &
