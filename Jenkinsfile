@@ -35,7 +35,7 @@ pipeline {
 
         stage('Déploiement avec Ansible') {
             steps {
-                sh "./${VENV_DIR}/bin/ansible-playbook -i inventory deploy.yml
+                sh "./${VENV_DIR}/bin/ansible-playbook -i inventory deploy.yml"
             }
         }
     }
