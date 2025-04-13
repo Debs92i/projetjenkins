@@ -35,7 +35,7 @@ pipeline {
 
         stage('Déploiement avec Ansible') {
             steps {
-                sh "./${VENV_DIR}/bin/ansible-playbook -i inventory deploy.yml --vault-password-file ~/.vault_pass.txt"
+                sh "./${VENV_DIR}/bin/ansible-playbook -i inventory deploy.yml
             }
         }
     }
