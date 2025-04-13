@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         ANSIBLE_HOST_KEY_CHECKING = 'False'
-        VENV_DIR = 'venv'  // Dossier de l'environnement virtuel
+        VENV_DIR = 'venv'
     }
 
     stages {
@@ -15,26 +15,27 @@ pipeline {
 
         stage('Créer un environnement virtuel') {
             steps {
-                sh 'python3 -m venv $VENV_DIR'
+                sh 'rm -rf ${VENV_DIR}'
+                sh 'python3 -m venv ${VENV_DIR}'
             }
         }
 
         stage('Installer les dépendances') {
             steps {
-                sh './$VENV_DIR/bin/pip install --upgrade pip'
-                sh './$VENV_DIR/bin/pip install -r requirements.txt'
+                sh "./${VENV_DIR}/bin/pip install --upgrade pip"
+                sh "./${VENV_DIR}/bin/pip install -r requirements.txt"
             }
         }
 
         stage('Tests unitaires') {
             steps {
-                sh './$VENV_DIR/bin/pytest test_app.py'
+                sh "./${VENV_DIR}/bin/pytest test_app.py"
             }
         }
 
         stage('Déploiement avec Ansible') {
             steps {
-                sh './$VENV_DIR/bin/ansible-playbook -i inventory deploy.yml --vault-password-file ~/.vault_pass.txt'
+                sh "./${VENV_DIR}/bin/ansible-playbook -i inventory deploy.yml --vault-password-file ~/.vault_pass.txt"
             }
         }
     }
