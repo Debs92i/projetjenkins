@@ -42,7 +42,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ Déploiement réussi !"
+            echo "✅ Clonage, Tests unitaires et Déploiement réussis !"
         }
         failure {
             echo "🚨 Le pipeline a échoué ! Vérifie les logs."
