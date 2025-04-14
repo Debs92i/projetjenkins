@@ -1,6 +1,8 @@
 - name: Déployer l'application simple
   hosts: appserver
   become: true
+  vars_files:
+    - secret.yml  # Charger les variables depuis le fichier Vault
 
   tasks:
     - name: Créer le dossier de l'app sur le serveur
@@ -16,3 +18,8 @@
 
     - name: Exécuter l'application (en arrière-plan ici juste pour test)
       shell: python3 /opt/simple-api/app.py &
+
+       # Exemple d'utilisation d'une variable provenant de secret.yml
+    - name: Afficher la clé secrète depuis Vault
+      debug:
+        msg: "La clé secrète est : {{ app_secret_key }}"
